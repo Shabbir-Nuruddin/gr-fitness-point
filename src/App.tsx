@@ -82,7 +82,7 @@ export default function App() {
   const copyY = useTransform(scrollYProgress, story ? [0, 0.17] : [0, 0.85], [0, -60]);
   const cueOpacity = useTransform(scrollYProgress, [0, story ? 0.08 : 0.12], [1, 0]);
   const right = SITE.align === "right";
-  const photo = SITE.hero.backdrop;
+  const photo = SITE.hero.backdrop ?? SITE.hero.fallback;
 
   useEffect(() => {
     document.documentElement.lang = lang;
@@ -130,19 +130,16 @@ export default function App() {
       {/* hero: the scene stays pinned while the first scroll drives it */}
       <section id="top" ref={stage} className={`relative ${story ? (reduced ? "h-[100svh]" : "h-[440svh]") : "h-[175svh]"}`}>
         <div className="sticky top-0 h-[100dvh] overflow-hidden">
-          {photo ? (
-            <motion.img
-              src={photo}
-              alt=""
-              aria-hidden
-              initial={reduced ? false : { scale: 1.14, opacity: 0 }}
-              animate={{ scale: 1.04, opacity: 1 }}
-              transition={{ duration: 2.4, ease: EASE }}
-              className="absolute inset-0 h-full w-full object-cover blur-[3px] brightness-[0.55]"
-            />
-          ) : (
-            <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_10%,var(--bg2),var(--bg)_70%)]" />
-          )}
+          <motion.img
+            src={photo}
+            alt=""
+            aria-hidden
+            initial={reduced ? false : { scale: 1.14, opacity: 0 }}
+            animate={{ scale: 1.04, opacity: 1 }}
+            transition={{ duration: 2.4, ease: EASE }}
+            className="absolute inset-0 h-full w-full object-cover blur-[2px] brightness-[0.42] saturate-[0.8]"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-bg/45" />
           <div className="absolute inset-0">
             <SceneBoundary>
               <Suspense fallback={null}>
@@ -150,14 +147,7 @@ export default function App() {
               </Suspense>
             </SceneBoundary>
           </div>
-          <div
-            className={
-              photo
-                ? `pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,var(--bg)_14%,color-mix(in_oklab,var(--bg)_55%,transparent)_42%,transparent_62%)] ${right ? "md:bg-[linear-gradient(to_left,color-mix(in_oklab,var(--bg)_88%,transparent)_8%,color-mix(in_oklab,var(--bg)_45%,transparent)_40%,transparent_58%)]" : "md:bg-[linear-gradient(to_right,color-mix(in_oklab,var(--bg)_88%,transparent)_8%,color-mix(in_oklab,var(--bg)_45%,transparent)_40%,transparent_58%)]"}`
-                : `pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,var(--bg)_20%,transparent_60%)] ${right ? "md:bg-[linear-gradient(to_left,var(--bg)_20%,transparent_62%)]" : "md:bg-[linear-gradient(to_right,var(--bg)_20%,transparent_62%)]"}`
-            }
-          />
-          <div className={`grain pointer-events-none absolute inset-0 mix-blend-overlay ${photo ? "opacity-40" : "opacity-70"}`} />
+          <div className="grain pointer-events-none absolute inset-0 opacity-40 mix-blend-overlay" />
 
           <motion.div
             style={reduced ? undefined : { opacity: copyOpacity, y: copyY }}
@@ -184,7 +174,7 @@ export default function App() {
                 <WaButton label={t.whatsapp} text={wa} />
                 <DirectionsButton label={t.directions} className="hidden sm:inline-flex" />
               </motion.div>
-              {fine && !reduced && !photo && <p className="mt-6 hidden text-[13px] text-ink-3 md:block">{t.drag}</p>}
+              {fine && !reduced && <p className="mt-6 hidden text-[13px] text-ink-3 md:block">{t.drag}</p>}
             </div>
           </motion.div>
 
@@ -200,7 +190,6 @@ export default function App() {
             </div>
           )}
 
-          {photo && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bg to-transparent" />}
           <motion.div style={{ opacity: cueOpacity }} className="pointer-events-none absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[12px] tracking-[0.2em] text-ink-3 md:flex">
             {t.scroll.toUpperCase()}
             <span className="block h-10 w-px overflow-hidden bg-line">
@@ -211,12 +200,12 @@ export default function App() {
       </section>
 
       {/* what the gym offers runs past like a wall banner */}
-      <div className="marquee relative -mt-[1px] overflow-hidden border-y border-line bg-bg-2 py-4" aria-hidden>
+      <div className="marquee relative -mt-[1px] overflow-hidden bg-accent py-4" aria-hidden>
         <div className="marquee-track flex w-max items-center gap-8 pr-8">
           {[...SITE.marquee, ...SITE.marquee, ...SITE.marquee, ...SITE.marquee].map((d, i) => (
-            <span key={i} className="flex items-center gap-8 font-display text-[clamp(1.4rem,2.6vw,2rem)] leading-none text-ink-2">
+            <span key={i} className="flex items-center gap-8 font-display text-[clamp(1.4rem,2.6vw,2rem)] leading-none text-on-accent">
               {d}
-              <span className="h-2 w-2 rotate-45 bg-accent" />
+              <span className="h-2 w-2 rotate-45 bg-on-accent" />
             </span>
           ))}
         </div>

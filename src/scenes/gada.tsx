@@ -27,7 +27,7 @@ function headGeo() {
 }
 
 /** The gada, Hanuman's mace and the akhada's oldest training tool, swings from upright onto the shoulder. */
-function Gada({ progress }: { progress: SceneProps["progress"] }) {
+export function Gada({ progress }: { progress: SceneProps["progress"] }) {
   const head = useMemo(headGeo, []);
   const collar = useMemo(() => lathe([[0.07, 0], [0.2, 0.04], [0.26, 0.12], [0.18, 0.2], [0.1, 0.26], [0.07, 0.3]], 48), []);
   const g = useRef<THREE.Group>(null);

@@ -50,10 +50,17 @@ export function Build({ lang, reduced, index }: { lang: Lang; reduced: boolean; 
   const steps = [b.pick ? pick !== null : null, b.items ? chosen.length > 0 : null, b.people ? true : null, b.when ? day !== null && time !== null : null].filter((x) => x !== null) as boolean[];
   const done = steps.filter(Boolean).length;
   let n = 0;
+  const bgPhoto = SITE.gallery.photos[3]?.src;
 
   return (
-    <section className="py-20 lg:py-32">
-      <div className={WRAP}>
+    <section className="relative overflow-hidden py-20 lg:py-32">
+      {bgPhoto && (
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <img src={bgPhoto} alt="" loading="lazy" className="h-full w-full object-cover brightness-[0.45] saturate-[0.8]" />
+          <div className="absolute inset-0 bg-bg/85" />
+        </div>
+      )}
+      <div className={`${WRAP} relative`}>
         <Heading index={index} title={bi(b.title, lang)} body={bi(b.body, lang)} reduced={reduced} />
         <div className="mt-12 grid gap-10 lg:grid-cols-[1.35fr_1fr] lg:gap-16">
           <div className="space-y-8">
